@@ -120,6 +120,17 @@
   @media (max-width: 640px) { .glossary-grid { grid-template-columns: 1fr; } }
   .g-cell { background: var(--panel); padding: 16px; }
 
+  /* Title Block */
+  .title-block { margin-top: 56px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel); }
+  .tb-head { padding: 14px 18px; font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; border-bottom: 1px solid var(--line); }
+  .tb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; background: #0A1F33; }
+  @media (max-width: 640px) { .tb-grid { grid-template-columns: 1fr 1fr; } }
+  .tb-item { border-right: 1px solid var(--line); border-top: 1px solid var(--line); padding: 12px 16px; }
+  .tb-item:first-child, .tb-grid:first-child .tb-item { border-top: none; }
+  .tb-item:last-child { border-right: none; }
+  .tb-k { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; margin-bottom: 2px; }
+  .tb-v { font-size: 13px; color: var(--ink); font-family: 'JetBrains Mono'; font-weight: 600; }
+
   /* Modal */
   .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(10,31,51,0.88); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; padding: 24px; }
@@ -226,7 +237,7 @@
     </div>
   </div>
 
-  <!-- Sections -->
+  <!-- Section 1: The Three Zones -->
   <section>
     <div class="sec-head"><span class="mono" style="color:var(--ink-faint);">§1</span><h2>The three zones, at a glance</h2></div>
     <div class="zones-grid">
@@ -248,6 +259,7 @@
     </div>
   </section>
 
+  <!-- Section 2: Signal Warnings -->
   <section>
     <div class="sec-head"><span class="mono" style="color:var(--ink-faint);">§2</span><h2>Signal warnings</h2></div>
     <div class="hazard-box">
@@ -257,6 +269,7 @@
     </div>
   </section>
 
+  <!-- Section 3: Glossary -->
   <section>
     <div class="sec-head"><span class="mono" style="color:var(--ink-faint);">§3</span><h2>Map legend</h2></div>
     <div class="glossary-grid">
@@ -266,6 +279,17 @@
       <div class="g-cell"><div class="mono" style="color:var(--mint); font-weight:700; font-size:13px; margin-bottom:4px;">RPC</div><p style="font-size:13px; color:var(--ink-dim);">Communication line between your wallet and the blockchain.</p></div>
     </div>
   </section>
+
+  <!-- Blueprint Title Block Footer -->
+  <div class="title-block">
+    <div class="tb-head">The Solana Line — beginner edition</div>
+    <div class="tb-grid">
+      <div class="tb-item"><div class="tb-k">SCALE</div><div class="tb-v">1 stop = 1 idea</div></div>
+      <div class="tb-item"><div class="tb-k">REV</div><div class="tb-v">Beginner</div></div>
+      <div class="tb-item"><div class="tb-k">SHEET</div><div class="tb-v">01 / 01</div></div>
+      <div class="tb-item"><div class="tb-k">STATUS</div><div class="tb-v">Ready to ride</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->
