@@ -1,0 +1,6 @@
+{
+  "name": "The Solana Line — Beginner's Transit Map",
+  "description": "An interactive transit-style blueprint map explaining Solana fundamentals to crypto beginners simply and clearly.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
