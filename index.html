@@ -163,8 +163,8 @@
   <div class="top-bar">
     <div class="doc-num"><span class="sw"></span>DWG NO. SOL–01 · BEGINNER EDITION</div>
     <div style="display:flex; gap:8px;">
-      <button class="btn-action btn-outline" id="btnTour" onclick="toggleTour()">▶ Авто-тур по станциям</button>
-      <button class="btn-action btn-mint" onclick="document.getElementById('kitModal').style.display='flex'">📁 GitHub Kit</button>
+      <button class="btn-action btn-outline" id="btnTour" onclick="toggleTour()">▶ Auto-Tour Stops</button>
+      <button class="btn-action btn-mint" onclick="document.getElementById('kitModal').style.display='flex'">📁 Bounty Toolkit</button>
     </div>
   </div>
 
@@ -279,8 +279,8 @@
     <h3 id="info-title">Wallet</h3>
     <p id="info-body">An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined.</p>
     <div class="info-controls">
-      <button class="btn-action btn-outline" onclick="prevStop()">← Назад</button>
-      <button class="btn-action btn-mint" onclick="nextStop()">Вперед →</button>
+      <button class="btn-action btn-outline" onclick="prevStop()">← Previous</button>
+      <button class="btn-action btn-mint" onclick="nextStop()">Next →</button>
     </div>
   </div>
 
@@ -337,7 +337,7 @@
 <div id="kitModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 style="font-family:'Barlow Condensed'; font-size:22px; color:var(--ink);">GitHub Repository &amp; Superteam Kit</h3>
+      <h3 style="font-family:'Barlow Condensed'; font-size:22px; color:var(--ink);">GitHub Repository &amp; Superteam Bounty Kit</h3>
       <button class="modal-close" onclick="document.getElementById('kitModal').style.display='none'">&times;</button>
     </div>
     <div class="kit-item">
@@ -409,11 +409,11 @@ function toggleTour(){
   if(tourInterval){
     clearInterval(tourInterval);
     tourInterval = null;
-    btn.textContent = '▶ Авто-тур по станциям';
+    btn.textContent = '▶ Auto-Tour Stops';
     btn.classList.remove('btn-amber');
     btn.classList.add('btn-outline');
   } else {
-    btn.textContent = '⏸ Остановить тур';
+    btn.textContent = '⏸ Pause Tour';
     btn.classList.remove('btn-outline');
     btn.classList.add('btn-amber');
     tourInterval = setInterval(()=>{
