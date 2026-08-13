@@ -3,172 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ride the Solana Line — 9 stops, simple &amp; clear</title>
+<title>The Solana Line — A Beginner's Transit Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0A1F33;
-    --panel:#0F2A45;
-    --panel-2:#12314F;
-    --grid:rgba(154,196,230,0.06);
-    --line:rgba(154,196,230,0.16);
-    --ink:#EAF2FA;
-    --ink-dim:#9FB8CE;
-    --ink-faint:#5E7B92;
-    --mint:#4ADE94;
-    --amber:#FFB238;
-    --coral:#FF6B4A;
+  :root {
+    --bg: #0A1F33;
+    --panel: #0F2A45;
+    --panel-2: #12314F;
+    --panel-hover: #1A4168;
+    --grid: rgba(154, 196, 230, 0.05);
+    --line: rgba(154, 196, 230, 0.16);
+    --ink: #EAF2FA;
+    --ink-dim: #9FB8CE;
+    --ink-faint: #5E7B92;
+    --mint: #4ADE94;
+    --mint-bg: rgba(74, 222, 148, 0.15);
+    --amber: #FFB238;
+    --amber-bg: rgba(255, 178, 56, 0.15);
+    --coral: #FF6B4A;
+    --coral-bg: rgba(255, 107, 74, 0.15);
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:var(--bg);
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size:32px 32px;
-    color:var(--ink);
-    font-family:'Inter', sans-serif;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg);
+    background-image: 
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
   }
-  h1,h2,h3,.tech{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:0.02em; }
-  .mono{ font-family:'JetBrains Mono', monospace; }
-  a{ color:inherit; }
 
-  .sheet{ max-width:1000px; margin:0 auto; padding:40px 24px 60px; }
+  .crosshair { position: fixed; width: 20px; height: 20px; pointer-events: none; opacity: 0.4; z-index: 40; }
+  .crosshair::before, .crosshair::after { content: ''; position: absolute; background: var(--ink-faint); }
+  .crosshair::before { top: 50%; left: 0; width: 100%; height: 1px; }
+  .crosshair::after { top: 0; left: 50%; width: 1px; height: 100%; }
+  .ch-tl { top: 12px; left: 12px; }
+  .ch-tr { top: 12px; right: 12px; }
+  .ch-bl { bottom: 12px; left: 12px; }
+  .ch-br { bottom: 12px; right: 12px; }
 
-  .top-bar{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:14px; }
-  .doc-num{ font-size:11px; color:var(--ink-faint); letter-spacing:0.12em; display:flex; align-items:center; gap:8px; }
-  .doc-num .sw{ width:6px; height:6px; background:var(--mint); border-radius:50%; box-shadow:0 0 8px var(--mint); }
+  .container { max-width: 1000px; margin: 0 auto; padding: 32px 20px 60px; position: relative; z-index: 10; }
+
+  h1, h2, h3, .font-display { font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--line);
+  }
+  .doc-tag { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; }
+  .doc-tag .dot { width: 6px; height: 6px; background: var(--mint); border-radius: 50%; box-shadow: 0 0 8px var(--mint); }
+  .top-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   
-  .btn-action{ font-family:'JetBrains Mono'; font-size:12px; font-weight:700; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
-  .btn-mint{ background:var(--mint); color:#0A1F33; }
-  .btn-mint:hover{ background:#3ec982; transform:translateY(-1px); }
-  .btn-amber{ background:var(--amber); color:#0A1F33; }
-  .btn-amber:hover{ background:#e59f2e; transform:translateY(-1px); }
-  .btn-outline{ background:var(--panel-2); color:var(--ink); border:1px solid var(--line); }
-  .btn-outline:hover{ background:#1A4168; }
-
-  /* Hero Showcase */
-  .hero-banner{ margin-bottom:28px; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#000; box-shadow:0 12px 32px rgba(0,0,0,0.5); position:relative; }
-  .hero-banner svg{ width:100%; height:auto; display:block; aspect-ratio:16/9; }
-
-  h1{
-    font-size:clamp(36px,5.5vw,60px); font-weight:700; line-height:0.98; color:var(--ink);
-    max-width:760px;
+  .btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+    padding: 7px 14px; border-radius: 4px; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.15s;
   }
-  h1 em{ font-style:normal; color:var(--amber); }
-  .lede{
-    margin-top:16px; font-size:16px; color:var(--ink-dim); max-width:620px;
-  }
+  .btn:active { transform: scale(0.97); }
+  .btn-mint { background: var(--mint); color: #0A1F33; }
+  .btn-mint:hover { background: #3ec982; }
+  .btn-outline { background: var(--panel-2); color: var(--ink); border: 1px solid var(--line); }
+  .btn-outline:hover { background: var(--panel-hover); border-color: var(--ink-dim); }
 
-  .nav-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:28px; }
-  .tab-btn{ background:var(--panel); border:1px solid var(--line); color:var(--ink-dim); padding:8px 14px; border-radius:4px; font-family:'JetBrains Mono'; font-size:12px; cursor:pointer; transition:all .15s; }
-  .tab-btn:hover{ border-color:var(--ink-dim); color:var(--ink); }
-  .tab-btn.active{ background:var(--mint); color:#0A1F33; font-weight:700; border-color:var(--mint); }
-
-  .map-wrap{
-    margin-top:16px; background:var(--panel); border:1px solid var(--line); border-radius:6px;
-    padding:24px 20px 12px; position:relative;
+  /* Hero Banner SVG Visual */
+  .hero-banner {
+    margin-bottom: 24px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    background: #000; box-shadow: 0 12px 32px rgba(0,0,0,0.5);
   }
-  .map-wrap .corner-tag{
-    position:absolute; top:-1px; left:-1px; background:var(--panel); border:1px solid var(--line); border-left:none; border-top:none;
-    font-family:'JetBrains Mono'; font-size:10px; color:var(--ink-faint); padding:4px 10px; letter-spacing:0.08em;
-  }
-  svg.map-svg{ display:block; width:100%; height:auto; }
-  .station{ cursor:pointer; }
-  .station circle.dot{ fill:var(--panel); stroke-width:3; transition:all .15s; }
-  .station:hover circle.dot{ stroke-width:6; r:9; }
-  .station.active circle.dot{ stroke-width:6; r:9; }
-  .station text{ font-family:'JetBrains Mono'; font-size:12px; fill:var(--ink-dim); transition:fill .15s; }
-  .station.active text{ fill:var(--ink); font-weight:700; }
-  .zone-label{ font-family:'Barlow Condensed'; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; }
-  .hub-ring{ animation:pulse 2s ease-in-out infinite; transform-origin:center; }
-  @keyframes pulse{ 0%,100%{ opacity:.6; r:19; } 50%{ opacity:.15; r:28; } }
+  .hero-banner svg { width: 100%; height: auto; display: block; aspect-ratio: 16/9; }
 
-  .legend{ display:flex; gap:20px; flex-wrap:wrap; padding:16px 4px 6px; border-top:1px solid var(--line); margin-top:8px; }
-  .legend-item{ display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--ink-dim); font-family:'JetBrains Mono'; }
-  .legend-item .sw{ width:14px; height:3px; border-radius:2px; }
+  .header-block { margin-bottom: 32px; }
+  h1 { font-size: clamp(34px, 5.5vw, 56px); font-weight: 700; line-height: 1.02; color: var(--ink); }
+  h1 em { font-style: normal; color: var(--amber); }
+  .lede { margin-top: 14px; font-size: 16px; color: var(--ink-dim); max-width: 680px; }
 
-  .info{
-    margin-top:20px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px;
-    padding:22px 24px; min-height:110px; transition:border-color .2s;
+  .stop-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 20px; }
+  .pill {
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink-dim);
+    padding: 6px 12px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    cursor: pointer; transition: all 0.15s;
   }
-  .info-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
-  .info .stop-no{ font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-faint); letter-spacing:0.1em; }
-  .info .badge{ font-family:'JetBrains Mono'; font-size:10px; padding:2px 8px; border-radius:10px; text-transform:uppercase; font-weight:700; }
-  .badge.z1{ background:rgba(74,222,148,0.15); color:var(--mint); border:1px solid rgba(74,222,148,0.3); }
-  .badge.z2{ background:rgba(255,178,56,0.15); color:var(--amber); border:1px solid rgba(255,178,56,0.3); }
-  .badge.z3{ background:rgba(255,107,74,0.15); color:var(--coral); border:1px solid rgba(255,107,74,0.3); }
+  .pill:hover { border-color: var(--ink-dim); color: var(--ink); }
+  .pill.active { background: var(--mint); color: #0A1F33; font-weight: 700; border-color: var(--mint); }
+
+  .map-box {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 24px 20px 14px; position: relative; margin-top: 20px;
+  }
+  .map-box .tag {
+    position: absolute; top: -1px; left: -1px; background: var(--panel); border: 1px solid var(--line);
+    border-left: none; border-top: none; font-family: 'JetBrains Mono'; font-size: 10px; color: var(--ink-faint);
+    padding: 4px 10px; letter-spacing: 0.08em;
+  }
+  svg.transit-svg { display: block; width: 100%; height: auto; }
+  .st-node { cursor: pointer; }
+  .st-node circle.dot { fill: var(--panel); stroke-width: 3; transition: all 0.15s; }
+  .st-node:hover circle.dot, .st-node.active circle.dot { stroke-width: 6; r: 9; }
+  .st-node text { font-family: 'JetBrains Mono'; font-size: 12px; fill: var(--ink-dim); transition: fill 0.15s; }
+  .st-node.active text { fill: var(--ink); font-weight: 700; }
+  .hub-pulse { animation: pulseHub 2s ease-in-out infinite; transform-origin: center; }
+  @keyframes pulseHub { 0%,100% { opacity: 0.6; r: 19; } 50% { opacity: 0.15; r: 28; } }
+
+  .map-legend {
+    display: flex; gap: 18px; flex-wrap: wrap; padding: 14px 4px 4px; border-top: 1px solid var(--line); margin-top: 8px;
+    font-size: 11.5px; color: var(--ink-dim); font-family: 'JetBrains Mono';
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-bar { width: 14px; height: 4px; border-radius: 2px; }
+
+  .station-card {
+    margin-top: 24px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 24px; position: relative; transition: border-color 0.2s;
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .card-stop-no { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.1em; }
+  .badge { font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; text-transform: uppercase; }
+  .badge-z1 { background: var(--mint-bg); color: var(--mint); border: 1px solid rgba(74,222,148,0.3); }
+  .badge-z2 { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(255,178,56,0.3); }
+  .badge-z3 { background: var(--coral-bg); color: var(--coral); border: 1px solid rgba(255,107,74,0.3); }
+
+  .station-title { font-size: 26px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .station-desc { font-size: 15px; color: var(--ink-dim); line-height: 1.6; max-width: 720px; }
   
-  .info h3{ font-size:24px; font-weight:700; color:var(--ink); margin-bottom:8px; }
-  .info p{ font-size:15px; color:var(--ink-dim); max-width:700px; line-height:1.55; }
-  .info-controls{ margin-top:16px; display:flex; gap:10px; }
-
-  section{ margin-top:56px; }
-  .sec-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:18px; }
-  .sec-num{ font-family:'JetBrains Mono'; font-size:13px; color:var(--ink-faint); }
-  h2{ font-size:24px; font-weight:600; color:var(--ink); }
-
-  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  @media (max-width:720px){ .grid-3{ grid-template-columns:1fr; } }
-  .zone-card{ background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:20px; border-top:3px solid var(--zc, var(--mint)); cursor:pointer; transition:transform .15s; }
-  .zone-card:hover{ transform:translateY(-2px); }
-  .zone-card h3{ font-size:17px; color:var(--ink); margin-bottom:8px; }
-  .zone-card p{ font-size:13.5px; color:var(--ink-dim); }
-
-  .hazard{
-    background:repeating-linear-gradient(135deg, rgba(255,178,56,0.05) 0 14px, rgba(255,178,56,0.1) 14px 28px);
-    border:1px solid rgba(255,178,56,0.3); border-radius:6px; padding:4px;
+  .takeaway-box {
+    margin-top: 16px; padding: 12px 16px; background: var(--panel); border-left: 3px solid var(--mint);
+    border-radius: 0 4px 4px 0; font-size: 13.5px; color: var(--ink);
   }
-  .haz-row{ background:var(--panel); margin:4px; padding:16px 18px; display:flex; gap:14px; align-items:flex-start; border-radius:4px; }
-  .haz-row .n{ font-family:'JetBrains Mono'; color:var(--amber); font-size:12px; flex-shrink:0; margin-top:2px; font-weight:700; }
-  .haz-row p{ font-size:13.5px; color:var(--ink-dim); }
-  .haz-row strong{ color:var(--ink); }
+  .takeaway-box strong { color: var(--mint); }
 
-  .glossary{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
-  @media (max-width:640px){ .glossary{ grid-template-columns:1fr; } }
-  .g-item{ background:var(--panel); padding:18px 20px; }
-  .g-item .term{ font-family:'JetBrains Mono'; font-size:13px; color:var(--mint); margin-bottom:6px; font-weight:700; }
-  .g-item p{ font-size:13.5px; color:var(--ink-dim); }
+  .card-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .nav-btns { display: flex; gap: 8px; }
 
-  .title-block{
-    margin-top:64px; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--panel);
+  section { margin-top: 56px; }
+  .sec-title-wrap { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  .sec-idx { font-family: 'JetBrains Mono'; font-size: 13px; color: var(--ink-faint); }
+  h2 { font-size: 24px; font-weight: 600; color: var(--ink); }
+
+  .zones-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 740px) { .zones-grid { grid-template-columns: 1fr; } }
+  .z-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px;
+    border-top: 3px solid var(--zc); cursor: pointer; transition: transform 0.15s, border-color 0.15s;
   }
-  .tb-title{ padding:16px 18px; font-family:'Barlow Condensed'; font-size:18px; font-weight:700; letter-spacing:0.04em; border-bottom:1px solid var(--line); }
-  .tb-row{ display:grid; grid-template-columns:1fr 1fr 1fr 1fr; background:#0A1F33; }
-  @media (max-width:640px){ .tb-row{ grid-template-columns:1fr 1fr; } }
-  .tb-cell{ border-right:1px solid var(--line); border-top:1px solid var(--line); padding:14px 16px; }
-  .tb-cell:first-child, .tb-row:first-child .tb-cell{ border-top:none; }
-  .tb-cell:last-child{ border-right:none; }
-  .tb-cell .k{ font-family:'JetBrains Mono'; font-size:10px; color:var(--ink-faint); letter-spacing:0.1em; margin-bottom:4px; }
-  .tb-cell .v{ font-size:13px; color:var(--ink); font-family:'JetBrains Mono'; }
+  .z-card:hover { transform: translateY(-2px); border-color: var(--ink-dim); }
+  .z-card h3 { font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+  .z-card p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.5; }
 
-  /* Modal */
-  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(10,31,51,0.85); backdrop-filter:blur(6px); z-index:100; align-items:center; justify-content:center; padding:16px; }
-  .modal-box{ background:var(--panel); border:1px solid var(--line); border-radius:8px; width:100%; max-width:680px; max-height:88vh; overflow-y:auto; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.6); }
-  .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:12px; }
-  .modal-close{ background:none; border:none; color:var(--ink-dim); font-size:24px; cursor:pointer; }
-  .kit-item{ background:#0A1F33; border:1px solid var(--line); border-radius:4px; padding:12px 14px; margin-bottom:12px; }
-  .kit-item .lbl{ font-family:'JetBrains Mono'; font-size:11px; color:var(--amber); margin-bottom:4px; }
-  .kit-item .val{ font-family:'JetBrains Mono'; font-size:12px; color:var(--ink); word-break:break-all; }
+  .hazard-box {
+    background: repeating-linear-gradient(135deg, rgba(255,178,56,0.05) 0 14px, rgba(255,178,56,0.1) 14px 28px);
+    border: 1px solid rgba(255,178,56,0.3); border-radius: 6px; padding: 6px;
+  }
+  .haz-item { background: var(--panel); margin: 4px; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; border-radius: 4px; }
+  .haz-num { font-family: 'JetBrains Mono'; color: var(--amber); font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .haz-item p { font-size: 14px; color: var(--ink-dim); }
+  .haz-item strong { color: var(--ink); }
+
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 640px) { .glossary-grid { grid-template-columns: 1fr; } }
+  .g-cell { background: var(--panel); padding: 18px 20px; }
+  .g-term { font-family: 'JetBrains Mono'; font-size: 14px; color: var(--mint); font-weight: 700; margin-bottom: 6px; }
+  .g-cell p { font-size: 13.5px; color: var(--ink-dim); }
+
+  .title-block { margin-top: 64px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel); }
+  .tb-head { padding: 16px 18px; font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; border-bottom: 1px solid var(--line); }
+  .tb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; background: #0A1F33; }
+  @media (max-width: 640px) { .tb-grid { grid-template-columns: 1fr 1fr; } }
+  .tb-item { border-right: 1px solid var(--line); border-top: 1px solid var(--line); padding: 14px 16px; }
+  .tb-item:first-child, .tb-grid:first-child .tb-item { border-top: none; }
+  .tb-item:last-child { border-right: none; }
+  .tb-k { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; margin-bottom: 4px; }
+  .tb-v { font-size: 13px; color: var(--ink); font-family: 'JetBrains Mono'; font-weight: 600; }
+
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(10,31,51,0.88); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+  .modal-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; width: 100%; max-width: 680px; max-height: 88vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
+  .modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .modal-close { background: none; border: none; color: var(--ink-dim); font-size: 24px; cursor: pointer; }
+  .kit-entry { background: #0A1F33; border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; margin-bottom: 12px; }
+  .kit-label { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--amber); margin-bottom: 4px; font-weight: 700; letter-spacing: 0.06em; }
+  .kit-value { font-family: 'JetBrains Mono'; font-size: 12px; color: var(--ink); word-break: break-all; }
 </style>
 </head>
 <body>
 
-<div class="sheet">
+<div class="crosshair ch-tl"></div>
+<div class="crosshair ch-tr"></div>
+<div class="crosshair ch-bl"></div>
+<div class="crosshair ch-br"></div>
+
+<div class="container">
 
   <div class="top-bar">
-    <div class="doc-num"><span class="sw"></span>DWG NO. SOL–01 · BEGINNER EDITION</div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn-action btn-outline" id="btnTour" onclick="toggleTour()">▶ Auto-Tour Stops</button>
-      <button class="btn-action btn-mint" onclick="document.getElementById('kitModal').style.display='flex'">📁 Bounty Toolkit</button>
+    <div class="doc-tag mono"><span class="dot"></span>DWG NO. SOL–01 · BEGINNER EDITION</div>
+    <div class="top-actions">
+      <button class="btn btn-outline" id="btnTour" onclick="toggleTour()">▶ Auto-Tour Stops</button>
+      <button class="btn btn-mint" onclick="document.getElementById('bountyModal').style.display='flex'">📁 Bounty Toolkit</button>
     </div>
   </div>
 
-  <!-- SVG Visual Blueprint Banner -->
   <div class="hero-banner">
     <svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -188,241 +226,318 @@
     </svg>
   </div>
 
-  <h1>Ride <em>the Solana Line</em> —<br>9 stops, simple &amp; clear.</h1>
-  <p class="lede">Solana looks complicated from the outside. It isn't — it's just a short, fast route. Click any stop below or use the quick buttons.</p>
-
-  <!-- Quick Stop Navigation Buttons -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="selectStop(1)">01. Wallet</button>
-    <button class="tab-btn" onclick="selectStop(2)">02. Seed Phrase</button>
-    <button class="tab-btn" onclick="selectStop(3)">03. Address</button>
-    <button class="tab-btn" onclick="selectStop(4)">04. Send</button>
-    <button class="tab-btn" onclick="selectStop(5)">05. Confirmed ~400ms</button>
-    <button class="tab-btn" onclick="selectStop(6)">06. Fee</button>
-    <button class="tab-btn" onclick="selectStop(7)">07. Verify URL</button>
-    <button class="tab-btn" onclick="selectStop(8)">08. Test First</button>
-    <button class="tab-btn" onclick="selectStop(9)">09. Read &amp; Sign</button>
+  <div class="header-block">
+    <h1>Ride <em>the Solana Line</em> —<br>9 stops, simple &amp; clear.</h1>
+    <p class="lede">Solana looks complicated from the outside. It isn't — it's just a short, ultra-fast route. Click any stop or explore the three key zones below.</p>
+    
+    <div class="stop-pills">
+      <button class="pill" data-idx="1" onclick="selectStop(1)">01. Wallet</button>
+      <button class="pill" data-idx="2" onclick="selectStop(2)">02. Seed Phrase</button>
+      <button class="pill" data-idx="3" onclick="selectStop(3)">03. Address</button>
+      <button class="pill" data-idx="4" onclick="selectStop(4)">04. Send</button>
+      <button class="pill active" data-idx="5" onclick="selectStop(5)">05. Confirmed ~400ms</button>
+      <button class="pill" data-idx="6" onclick="selectStop(6)">06. Fee</button>
+      <button class="pill" data-idx="7" onclick="selectStop(7)">07. Verify URL</button>
+      <button class="pill" data-idx="8" onclick="selectStop(8)">08. Test First</button>
+      <button class="pill" data-idx="9" onclick="selectStop(9)">09. Read &amp; Sign</button>
+    </div>
   </div>
 
-  <!-- Interactive SVG Map -->
-  <div class="map-wrap">
-    <span class="corner-tag">CLICK ANY STOP</span>
-    <svg class="map-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
+  <div class="map-box">
+    <span class="tag mono">LIVE TRANSIT SCHEMATIC</span>
+    <svg class="transit-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
       <line x1="60" y1="90" x2="60" y2="110" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
-      <text x="80" y="82" class="zone-label" fill="var(--mint)">Getting started</text>
+      <text x="80" y="82" class="zone-label" fill="var(--mint)" font-family="'Barlow Condensed'" font-size="13" font-weight="600" letter-spacing="1">Zone 1: Getting started</text>
       <line x1="60" y1="200" x2="330" y2="200" stroke="var(--mint)" stroke-width="6" stroke-linecap="round"/>
 
-      <text x="380" y="82" class="zone-label" fill="var(--amber)">How it works</text>
+      <text x="380" y="82" class="zone-label" fill="var(--amber)" font-family="'Barlow Condensed'" font-size="13" font-weight="600" letter-spacing="1">Zone 2: How it works</text>
       <line x1="330" y1="200" x2="630" y2="200" stroke="var(--amber)" stroke-width="6"/>
 
-      <text x="695" y="82" class="zone-label" fill="var(--coral)">Stay safe</text>
+      <text x="695" y="82" class="zone-label" fill="var(--coral)" font-family="'Barlow Condensed'" font-size="13" font-weight="600" letter-spacing="1">Zone 3: Stay safe</text>
       <line x1="630" y1="200" x2="900" y2="200" stroke="var(--coral)" stroke-width="6" stroke-linecap="round"/>
 
       <line x1="330" y1="170" x2="330" y2="230" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
       <line x1="630" y1="170" x2="630" y2="230" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
 
-      <g class="station" data-id="1" onclick="selectStop(1)">
+      <g class="st-node" data-id="1" onclick="selectStop(1)">
         <circle class="dot" cx="80" cy="200" r="8" stroke="var(--mint)"/>
         <text x="80" y="234" text-anchor="middle">Wallet</text>
       </g>
-      <g class="station" data-id="2" onclick="selectStop(2)">
+      <g class="st-node" data-id="2" onclick="selectStop(2)">
         <circle class="dot" cx="180" cy="200" r="8" stroke="var(--mint)"/>
         <text x="180" y="234" text-anchor="middle">Seed phrase</text>
       </g>
-      <g class="station" data-id="3" onclick="selectStop(3)">
+      <g class="st-node" data-id="3" onclick="selectStop(3)">
         <circle class="dot" cx="280" cy="200" r="8" stroke="var(--mint)"/>
         <text x="280" y="234" text-anchor="middle">Address</text>
       </g>
 
-      <g class="station" data-id="4" onclick="selectStop(4)">
+      <g class="st-node" data-id="4" onclick="selectStop(4)">
         <circle class="dot" cx="380" cy="200" r="8" stroke="var(--amber)"/>
         <text x="380" y="234" text-anchor="middle">Send</text>
       </g>
-      <g class="station" data-id="5" onclick="selectStop(5)">
-        <circle class="hub-ring" cx="480" cy="200" r="20" fill="none" stroke="var(--amber)" stroke-width="2"/>
+      <g class="st-node active" data-id="5" onclick="selectStop(5)">
+        <circle class="hub-pulse" cx="480" cy="200" r="20" fill="none" stroke="var(--amber)" stroke-width="2"/>
         <circle class="dot" cx="480" cy="200" r="14" stroke="var(--ink)" fill="var(--amber)"/>
         <text x="480" y="240" text-anchor="middle" font-weight="700" fill="var(--ink)">Confirmed ~400ms</text>
       </g>
-      <g class="station" data-id="6" onclick="selectStop(6)">
+      <g class="st-node" data-id="6" onclick="selectStop(6)">
         <circle class="dot" cx="580" cy="200" r="8" stroke="var(--amber)"/>
         <text x="580" y="234" text-anchor="middle">Fee</text>
       </g>
 
-      <g class="station" data-id="7" onclick="selectStop(7)">
+      <g class="st-node" data-id="7" onclick="selectStop(7)">
         <circle class="dot" cx="680" cy="200" r="8" stroke="var(--coral)"/>
         <text x="680" y="234" text-anchor="middle">Verify URL</text>
       </g>
-      <g class="station" data-id="8" onclick="selectStop(8)">
+      <g class="st-node" data-id="8" onclick="selectStop(8)">
         <circle class="dot" cx="780" cy="200" r="8" stroke="var(--coral)"/>
         <text x="780" y="234" text-anchor="middle">Test first</text>
       </g>
-      <g class="station" data-id="9" onclick="selectStop(9)">
+      <g class="st-node" data-id="9" onclick="selectStop(9)">
         <circle class="dot" cx="880" cy="200" r="8" stroke="var(--coral)"/>
         <text x="880" y="234" text-anchor="middle">Read &amp; sign</text>
       </g>
     </svg>
 
-    <div class="legend">
-      <div class="legend-item"><span class="sw" style="background:var(--mint)"></span>Zone 1: Getting started</div>
-      <div class="legend-item"><span class="sw" style="background:var(--amber)"></span>Zone 2: How it works</div>
-      <div class="legend-item"><span class="sw" style="background:var(--coral)"></span>Zone 3: Stay safe</div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="legend-bar" style="background:var(--mint)"></span>Zone 1: Getting started</div>
+      <div class="legend-item"><span class="legend-bar" style="background:var(--amber)"></span>Zone 2: How it works</div>
+      <div class="legend-item"><span class="legend-bar" style="background:var(--coral)"></span>Zone 3: Stay safe</div>
       <div class="legend-item">● Interchange = moment transaction is final (~400ms)</div>
     </div>
   </div>
 
-  <!-- Dynamic Info Panel -->
-  <div class="info" id="info">
-    <div class="info-header">
-      <div class="stop-no mono" id="info-no">STOP 01 / 09</div>
-      <div class="badge z1" id="info-zone">Zone 1: Getting Started</div>
+  <div class="station-card" id="stationCard">
+    <div class="card-top">
+      <div class="card-stop-no mono" id="stopNum">STOP 05 / 09</div>
+      <div class="badge badge-z2" id="stopZone">Zone 2: How It Works</div>
     </div>
-    <h3 id="info-title">Wallet</h3>
-    <p id="info-body">An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined.</p>
-    <div class="info-controls">
-      <button class="btn-action btn-outline" onclick="prevStop()">← Previous</button>
-      <button class="btn-action btn-mint" onclick="nextStop()">Next →</button>
+    <h3 class="station-title font-display" id="stopTitle">Confirmed ~400ms</h3>
+    <p class="station-desc" id="stopDesc">This is the central interchange. Once validators agree, your transaction is written into the ledger — final, in under half a second. There's no waiting around.</p>
+    
+    <div class="takeaway-box" id="takeawayBox">
+      <strong>Key Takeaway:</strong> <span id="stopTakeaway">Solana's Proof of History allows validators to agree asynchronously, achieving true settlement in ~400ms without blocking.</span>
+    </div>
+
+    <div class="card-controls">
+      <div class="mono" style="font-size:12px; color:var(--ink-faint);">Use ← Previous / Next → to navigate</div>
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevStop()">← Previous</button>
+        <button class="btn btn-mint" onclick="nextStop()">Next →</button>
+      </div>
     </div>
   </div>
 
   <section>
-    <div class="sec-head"><span class="sec-num">§1</span><h2>The three zones, at a glance</h2></div>
-    <div class="grid-3">
-      <div class="zone-card" style="--zc:var(--mint)" onclick="selectStop(1)">
-        <h3>Zone 1: Getting started</h3>
+    <div class="sec-title-wrap"><span class="sec-idx mono">§1</span><h2>The three zones, at a glance</h2></div>
+    <div class="zones-grid">
+      <div class="z-card" style="--zc:var(--mint)" onclick="selectStop(1)">
+        <h3 class="font-display">Getting started</h3>
         <p>Install a wallet, back up your seed phrase, get your address. This is the one-time setup — five minutes, done once.</p>
       </div>
-      <div class="zone-card" style="--zc:var(--amber)" onclick="selectStop(4)">
-        <h3>Zone 2: How it works</h3>
+      <div class="z-card" style="--zc:var(--amber)" onclick="selectStop(4)">
+        <h3 class="font-display">How it works</h3>
         <p>Every action you take — a swap, a payment, a mint — becomes a transaction. Validators confirm it in about 400 milliseconds, for a fraction of a cent.</p>
       </div>
-      <div class="zone-card" style="--zc:var(--coral)" onclick="selectStop(7)">
-        <h3>Zone 3: Stay safe</h3>
+      <div class="z-card" style="--zc:var(--coral)" onclick="selectStop(7)">
+        <h3 class="font-display">Stay safe</h3>
         <p>The habits that keep beginners safe: check the URL, test small, and actually read what you're signing.</p>
       </div>
     </div>
   </section>
 
   <section>
-    <div class="sec-head"><span class="sec-num">§2</span><h2>Signal warnings</h2></div>
-    <div class="hazard">
-      <div class="haz-row"><span class="n mono">01</span><p><strong>Your seed phrase is not a password.</strong> It's a master key. No app, exchange, or "support agent" will ever legitimately ask for it.</p></div>
-      <div class="haz-row"><span class="n mono">02</span><p><strong>A copycat site looks identical to the real one.</strong> Check the URL character by character before connecting your wallet.</p></div>
-      <div class="haz-row"><span class="n mono">03</span><p><strong>Free money is the bait, not the gift.</strong> Unsolicited "airdrops" asking for a wallet connection are almost always scams.</p></div>
+    <div class="sec-title-wrap"><span class="sec-idx mono">§2</span><h2>Signal warnings</h2></div>
+    <div class="hazard-box">
+      <div class="haz-item"><span class="haz-num">01</span><p><strong>Your seed phrase is not a password.</strong> It's a master key. No app, exchange, or "support agent" will ever legitimately ask for it.</p></div>
+      <div class="haz-item"><span class="haz-num">02</span><p><strong>A copycat site looks identical to the real one.</strong> Check the URL character by character before connecting your wallet.</p></div>
+      <div class="haz-item"><span class="haz-num">03</span><p><strong>Free money is the bait, not the gift.</strong> Unsolicited "airdrops" asking for a wallet connection are almost always scams.</p></div>
     </div>
   </section>
 
   <section>
-    <div class="sec-head"><span class="sec-num">§3</span><h2>Map legend</h2></div>
-    <div class="glossary">
-      <div class="g-item"><div class="term">SOL</div><p>The native currency — used to pay tiny network fees, or to stake and earn rewards.</p></div>
-      <div class="g-item"><div class="term">Validator</div><p>An independent computer that confirms transactions. Thousands run the network together — no single owner.</p></div>
-      <div class="g-item"><div class="term">Proof of History</div><p>A shared, built-in clock that lets validators agree fast without stopping to check in with each other.</p></div>
-      <div class="g-item"><div class="term">RPC</div><p>The "phone line" your wallet or app uses to talk to the network. Invisible, but every transaction needs one.</p></div>
+    <div class="sec-title-wrap"><span class="sec-idx mono">§3</span><h2>Map legend</h2></div>
+    <div class="glossary-grid">
+      <div class="g-cell"><div class="g-term">SOL</div><p>The native currency — used to pay tiny network fees, or to stake and earn rewards.</p></div>
+      <div class="g-cell"><div class="g-term">Validator</div><p>An independent computer that confirms transactions. Thousands run the network together — no single owner.</p></div>
+      <div class="g-cell"><div class="g-term">Proof of History</div><p>A shared, built-in clock that lets validators agree fast without stopping to check in with each other.</p></div>
+      <div class="g-cell"><div class="g-term">RPC</div><p>The "phone line" your wallet or app uses to talk to the network. Invisible, but every transaction needs one.</p></div>
     </div>
   </section>
 
   <div class="title-block">
-    <div class="tb-title">The Solana Line — beginner edition</div>
-    <div class="tb-row">
-      <div class="tb-cell"><div class="k">SCALE</div><div class="v">1 stop = 1 idea</div></div>
-      <div class="tb-cell"><div class="k">REV</div><div class="v">Beginner</div></div>
-      <div class="tb-cell"><div class="k">SHEET</div><div class="v">01 / 01</div></div>
-      <div class="tb-cell"><div class="k">STATUS</div><div class="v">Ready to ride</div></div>
+    <div class="tb-head">The Solana Line — beginner edition</div>
+    <div class="tb-grid">
+      <div class="tb-item"><div class="tb-k">SCALE</div><div class="tb-v">1 stop = 1 idea</div></div>
+      <div class="tb-item"><div class="tb-k">REV</div><div class="tb-v">Beginner</div></div>
+      <div class="tb-item"><div class="tb-k">SHEET</div><div class="tb-v">01 / 01</div></div>
+      <div class="tb-item"><div class="tb-k">STATUS</div><div class="tb-v">Ready to ride</div></div>
     </div>
   </div>
 
 </div>
 
-<!-- Kit Modal -->
-<div id="kitModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 style="font-family:'Barlow Condensed'; font-size:22px; color:var(--ink);">GitHub Repository &amp; Superteam Bounty Kit</h3>
-      <button class="modal-close" onclick="document.getElementById('kitModal').style.display='none'">&times;</button>
+<div id="bountyModal" class="modal-backdrop" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-card">
+    <div class="modal-top">
+      <h3 class="font-display" style="font-size:22px; color:var(--ink);">Superteam Earn Bounty Submission Kit</h3>
+      <button class="modal-close" onclick="document.getElementById('bountyModal').style.display='none'">&times;</button>
     </div>
-    <div class="kit-item">
-      <div class="lbl">REPO NAME</div>
-      <div class="val">Ride-the-Solana-Line-9-stops-simple-clear.</div>
+    <div class="kit-entry">
+      <div class="kit-label">PROJECT NAME</div>
+      <div class="kit-value">The Solana Line — A Beginner's Transit Map</div>
     </div>
-    <div class="kit-item">
-      <div class="lbl">ABOUT / DESCRIPTION</div>
-      <div class="val">Ride the Solana Line: 9 stops, simple &amp; clear. An interactive transit-style blueprint map explaining Solana blockchain fundamentals simply for crypto beginners.</div>
+    <div class="kit-entry">
+      <div class="kit-label">LIVE APPLICATION URL</div>
+      <div class="kit-value">https://nataliaborova.github.io/Ride-the-Solana-Line-9-stops-simple-clear./</div>
     </div>
-    <div class="kit-item">
-      <div class="lbl">SUPERTEAM EARN BOUNTY LISTING</div>
-      <div class="val"><a href="https://superteam.fun/earn/listing/explain-solana-to-crypto-beginners" target="_blank" style="color:var(--mint); text-decoration:underline;">Explain Solana to Crypto Beginners Listing &rarr;</a></div>
+    <div class="kit-entry">
+      <div class="kit-label">GITHUB REPOSITORY</div>
+      <div class="kit-value">https://github.com/NataliaBorova/Ride-the-Solana-Line-9-stops-simple-clear.</div>
+    </div>
+    <div class="kit-entry">
+      <div class="kit-label">DESCRIPTION (READY TO COPY)</div>
+      <div class="kit-value">Ride the Solana Line: 9 stops, simple &amp; clear. An interactive transit-style blueprint map &amp; educational guide explaining Solana blockchain fundamentals simply for crypto beginners. Features interactive stops, ~400ms confirmation mechanics, signal warnings, and visual glossary.</div>
+    </div>
+    <div class="kit-entry">
+      <div class="kit-label">SUPERTEAM EARN BOUNTY LISTING</div>
+      <div class="kit-value"><a href="https://superteam.fun/earn/listing/explain-solana-to-crypto-beginners" target="_blank" style="color:var(--mint); text-decoration:underline;">Explain Solana to Crypto Beginners Listing &rarr;</a></div>
     </div>
   </div>
 </div>
 
 <script>
-const stops = {
-  1:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Wallet", body:"An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined."},
-  2:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Seed phrase", body:"A 12–24 word backup that recreates your wallet completely. Write it on paper, never type it anywhere, never screenshot it."},
-  3:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Address", body:"A public string anyone can send you funds to — safe to share, unlike your seed phrase. Think of it as your account number."},
-  4:{zone:"Zone 2: How It Works", zClass:"z2", title:"Send", body:"You approve an action in your wallet — a swap, a payment, a mint — and it becomes a transaction, broadcast to the network."},
-  5:{zone:"Zone 2: How It Works", zClass:"z2", title:"Confirmed ~400ms", body:"This is the central interchange. Once validators agree, your transaction is written into the ledger — final, in under half a second. There's no waiting around."},
-  6:{zone:"Zone 2: How It Works", zClass:"z2", title:"Fee", body:"A small cost to process your transaction — typically a fraction of a cent, whether you're sending $5 or $5,000."},
-  7:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Verify URL", body:"Fake copies of popular sites are the most common way beginners lose funds. Check the address bar before connecting your wallet."},
-  8:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Test first", body:"Before moving a large amount, send a small test transaction. If it arrives correctly, you're clear to send the rest."},
-  9:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Read & sign", body:"Your wallet's approval pop-up is your last checkpoint. Read what it says before you sign — it's the only step standing between you and a mistake."}
+const stopsData = {
+  1: {
+    zone: "Zone 1: Getting Started",
+    badgeClass: "badge-z1",
+    title: "Wallet",
+    desc: "An app like Phantom, Solflare, or Backpack. It holds your private keys and lets you sign transactions — think of it as your login and digital signature combined.",
+    takeaway: "Your wallet never stores crypto directly; it securely manages the private cryptographic keys that authorize moves on the ledger."
+  },
+  2: {
+    zone: "Zone 1: Getting Started",
+    badgeClass: "badge-z1",
+    title: "Seed Phrase",
+    desc: "A 12–24 word master backup that recreates your wallet completely. Write it on paper, store it in a dry and safe place, and never type it into any website or screenshot it.",
+    takeaway: "If you lose your seed phrase, nobody on Earth can recover your account. If someone steals it, they own all your assets."
+  },
+  3: {
+    zone: "Zone 1: Getting Started",
+    badgeClass: "badge-z1",
+    title: "Address",
+    desc: "A public cryptographic string (e.g. 7xKX...9qZ) that anyone can use to send you tokens. Unlike your seed phrase, your public address is completely safe to share.",
+    takeaway: "Think of your address like an email address or IBAN bank account number — safe to receive funds openly."
+  },
+  4: {
+    zone: "Zone 2: How It Works",
+    badgeClass: "badge-z2",
+    title: "Send",
+    desc: "You approve an action inside your wallet — a token swap, payment, NFT mint, or transfer. It gets packaged into an atomic instruction and broadcast to network RPC nodes.",
+    takeaway: "Every transaction contains explicit instructions signed cryptographically by your private key."
+  },
+  5: {
+    zone: "Zone 2: How It Works",
+    badgeClass: "badge-z2",
+    title: "Confirmed ~400ms",
+    desc: "This is the central interchange. Solana's Proof of History clock lets validator nodes sequence and finalize your transaction in about 400 milliseconds.",
+    takeaway: "True sub-second finality means zero waiting around in mempools for block confirmations."
+  },
+  6: {
+    zone: "Zone 2: How It Works",
+    badgeClass: "badge-z2",
+    title: "Fee",
+    desc: "A microscopic network fee paid in SOL (typically $0.00025). Whether you move $5 or $5,000,000, processing costs remain minimal and predictable.",
+    takeaway: "Keep a small amount of SOL (0.05 SOL) in your wallet at all times to cover hundreds of future transaction fees."
+  },
+  7: {
+    zone: "Zone 3: Stay Safe",
+    badgeClass: "badge-z3",
+    title: "Verify URL",
+    desc: "Fake copycat sites that look pixel-for-pixel identical to real apps are the most common trap for beginners. Always bookmark official URLs and verify every character in the address bar.",
+    takeaway: "Never click Google Search ad links when connecting your wallet to DeFi or NFT platforms."
+  },
+  8: {
+    zone: "Zone 3: Stay Safe",
+    badgeClass: "badge-z3",
+    title: "Test First",
+    desc: "Before sending a large sum, always make a small test transfer (e.g. $1). Once it confirms in 400ms and the balance arrives, you are 100% safe to send the rest.",
+    takeaway: "Sending a tiny test transaction eliminates stress and guarantees the destination address is accurate."
+  },
+  9: {
+    zone: "Zone 3: Stay Safe",
+    badgeClass: "badge-z3",
+    title: "Read & Sign",
+    desc: "Your wallet's transaction simulation popup is your last safety shield. Review what assets leave your wallet before pressing approve.",
+    takeaway: "Modern wallets show exact asset balances before and after the transaction — never sign blindly."
+  }
 };
 
-let currentStop = 1;
-let tourInterval = null;
+let currentStop = 5;
+let tourTimer = null;
 
-function selectStop(id){
+function selectStop(id) {
   currentStop = id;
-  document.querySelectorAll('.station').forEach(s=>s.classList.remove('active'));
-  const el = document.querySelector('.station[data-id="'+id+'"]');
-  if(el) el.classList.add('active');
-
-  document.querySelectorAll('.tab-btn').forEach((btn, idx)=>{
-    if(idx+1 === id) btn.classList.add('active');
-    else btn.classList.remove('active');
+  
+  document.querySelectorAll('.st-node').forEach(node => {
+    if (parseInt(node.getAttribute('data-id')) === id) {
+      node.classList.add('active');
+    } else {
+      node.classList.remove('active');
+    }
   });
 
-  const data = stops[id];
-  document.getElementById('info-no').textContent = 'STOP 0'+id+' / 09';
-  document.getElementById('info-title').textContent = data.title;
-  document.getElementById('info-body').textContent = data.body;
+  document.querySelectorAll('.pill').forEach(btn => {
+    if (parseInt(btn.getAttribute('data-idx')) === id) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  const stop = stopsData[id];
+  document.getElementById('stopNum').textContent = 'STOP 0' + id + ' / 09';
+  document.getElementById('stopTitle').textContent = stop.title;
+  document.getElementById('stopDesc').textContent = stop.desc;
+  document.getElementById('stopTakeaway').textContent = stop.takeaway;
   
-  const zoneBadge = document.getElementById('info-zone');
-  zoneBadge.textContent = data.zone;
-  zoneBadge.className = 'badge ' + data.zClass;
+  const zoneEl = document.getElementById('stopZone');
+  zoneEl.textContent = stop.zone;
+  zoneEl.className = 'badge ' + stop.badgeClass;
 }
 
-function nextStop(){
+function nextStop() {
   let next = currentStop + 1;
-  if(next > 9) next = 1;
+  if (next > 9) next = 1;
   selectStop(next);
 }
 
-function prevStop(){
+function prevStop() {
   let prev = currentStop - 1;
-  if(prev < 1) prev = 9;
+  if (prev < 1) prev = 9;
   selectStop(prev);
 }
 
-function toggleTour(){
+function toggleTour() {
   const btn = document.getElementById('btnTour');
-  if(tourInterval){
-    clearInterval(tourInterval);
-    tourInterval = null;
+  if (tourTimer) {
+    clearInterval(tourTimer);
+    tourTimer = null;
     btn.textContent = '▶ Auto-Tour Stops';
-    btn.classList.remove('btn-amber');
+    btn.classList.remove('btn-mint');
     btn.classList.add('btn-outline');
   } else {
     btn.textContent = '⏸ Pause Tour';
     btn.classList.remove('btn-outline');
-    btn.classList.add('btn-amber');
-    tourInterval = setInterval(()=>{
+    btn.classList.add('btn-mint');
+    tourTimer = setInterval(() => {
       nextStop();
-    }, 2500);
+    }, 2800);
   }
 }
 
-selectStop(1);
+selectStop(5);
 </script>
 
 </body>
