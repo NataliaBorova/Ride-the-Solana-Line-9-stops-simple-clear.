@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Solana Line — A Beginner's Transit Map</title>
+<title>Ride the Solana Line — 9 stops, simple &amp; clear</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0A1F33;
@@ -37,58 +37,75 @@
   .mono{ font-family:'JetBrains Mono', monospace; }
   a{ color:inherit; }
 
-  .reg{ position:fixed; width:22px; height:22px; z-index:60; pointer-events:none; opacity:0.5; }
-  .reg::before,.reg::after{ content:''; position:absolute; background:var(--ink-faint); }
-  .reg::before{ width:100%; height:1px; top:50%; }
-  .reg::after{ width:1px; height:100%; left:50%; }
-  .reg.tl{ top:14px; left:14px; } .reg.tr{ top:14px; right:14px; }
-  .reg.bl{ bottom:14px; left:14px; } .reg.br{ bottom:14px; right:14px; }
+  .sheet{ max-width:1000px; margin:0 auto; padding:40px 24px 60px; }
 
-  .sheet{ max-width:1000px; margin:0 auto; padding:60px 24px 40px; }
-
-  .doc-num{ font-size:12px; color:var(--ink-faint); letter-spacing:0.12em; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+  .top-bar{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:14px; }
+  .doc-num{ font-size:11px; color:var(--ink-faint); letter-spacing:0.12em; display:flex; align-items:center; gap:8px; }
   .doc-num .sw{ width:6px; height:6px; background:var(--mint); border-radius:50%; box-shadow:0 0 8px var(--mint); }
+  
+  .btn-action{ font-family:'JetBrains Mono'; font-size:12px; font-weight:700; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+  .btn-mint{ background:var(--mint); color:#0A1F33; }
+  .btn-mint:hover{ background:#3ec982; transform:translateY(-1px); }
+  .btn-amber{ background:var(--amber); color:#0A1F33; }
+  .btn-amber:hover{ background:#e59f2e; transform:translateY(-1px); }
+  .btn-outline{ background:var(--panel-2); color:var(--ink); border:1px solid var(--line); }
+  .btn-outline:hover{ background:#1A4168; }
+
+  /* Hero Showcase */
+  .hero-banner{ margin-bottom:28px; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#000; box-shadow:0 12px 32px rgba(0,0,0,0.5); position:relative; }
+  .hero-banner svg{ width:100%; height:auto; display:block; aspect-ratio:16/9; }
 
   h1{
-    font-size:clamp(36px,6vw,60px); font-weight:700; line-height:0.98; color:var(--ink);
+    font-size:clamp(36px,5.5vw,60px); font-weight:700; line-height:0.98; color:var(--ink);
     max-width:760px;
   }
   h1 em{ font-style:normal; color:var(--amber); }
   .lede{
-    margin-top:16px; font-size:16px; color:var(--ink-dim); max-width:580px;
-    font-family:'Inter'; text-transform:none; letter-spacing:normal;
+    margin-top:16px; font-size:16px; color:var(--ink-dim); max-width:620px;
   }
 
+  .nav-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:28px; }
+  .tab-btn{ background:var(--panel); border:1px solid var(--line); color:var(--ink-dim); padding:8px 14px; border-radius:4px; font-family:'JetBrains Mono'; font-size:12px; cursor:pointer; transition:all .15s; }
+  .tab-btn:hover{ border-color:var(--ink-dim); color:var(--ink); }
+  .tab-btn.active{ background:var(--mint); color:#0A1F33; font-weight:700; border-color:var(--mint); }
+
   .map-wrap{
-    margin-top:40px; background:var(--panel); border:1px solid var(--line); border-radius:6px;
-    padding:26px 20px 12px; position:relative;
+    margin-top:16px; background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:24px 20px 12px; position:relative;
   }
   .map-wrap .corner-tag{
     position:absolute; top:-1px; left:-1px; background:var(--panel); border:1px solid var(--line); border-left:none; border-top:none;
     font-family:'JetBrains Mono'; font-size:10px; color:var(--ink-faint); padding:4px 10px; letter-spacing:0.08em;
   }
-  svg{ display:block; width:100%; height:auto; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
   .station{ cursor:pointer; }
   .station circle.dot{ fill:var(--panel); stroke-width:3; transition:all .15s; }
   .station:hover circle.dot{ stroke-width:6; r:9; }
   .station.active circle.dot{ stroke-width:6; r:9; }
-  .station text{ font-family:'JetBrains Mono'; font-size:12px; fill:var(--ink-dim); }
+  .station text{ font-family:'JetBrains Mono'; font-size:12px; fill:var(--ink-dim); transition:fill .15s; }
   .station.active text{ fill:var(--ink); font-weight:700; }
   .zone-label{ font-family:'Barlow Condensed'; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; }
   .hub-ring{ animation:pulse 2s ease-in-out infinite; transform-origin:center; }
   @keyframes pulse{ 0%,100%{ opacity:.6; r:19; } 50%{ opacity:.15; r:28; } }
 
   .legend{ display:flex; gap:20px; flex-wrap:wrap; padding:16px 4px 6px; border-top:1px solid var(--line); margin-top:8px; }
-  .legend-item{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-dim); font-family:'JetBrains Mono'; }
+  .legend-item{ display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--ink-dim); font-family:'JetBrains Mono'; }
   .legend-item .sw{ width:14px; height:3px; border-radius:2px; }
 
   .info{
     margin-top:20px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px;
-    padding:22px 24px; min-height:96px;
+    padding:22px 24px; min-height:110px; transition:border-color .2s;
   }
-  .info .stop-no{ font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-faint); letter-spacing:0.1em; margin-bottom:4px; }
-  .info h3{ font-size:22px; font-weight:600; color:var(--ink); margin-bottom:6px; text-transform:none; letter-spacing:normal;}
-  .info p{ font-size:14.5px; color:var(--ink-dim); font-family:'Inter'; text-transform:none; letter-spacing:normal; max-width:640px; }
+  .info-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+  .info .stop-no{ font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-faint); letter-spacing:0.1em; }
+  .info .badge{ font-family:'JetBrains Mono'; font-size:10px; padding:2px 8px; border-radius:10px; text-transform:uppercase; font-weight:700; }
+  .badge.z1{ background:rgba(74,222,148,0.15); color:var(--mint); border:1px solid rgba(74,222,148,0.3); }
+  .badge.z2{ background:rgba(255,178,56,0.15); color:var(--amber); border:1px solid rgba(255,178,56,0.3); }
+  .badge.z3{ background:rgba(255,107,74,0.15); color:var(--coral); border:1px solid rgba(255,107,74,0.3); }
+  
+  .info h3{ font-size:24px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+  .info p{ font-size:15px; color:var(--ink-dim); max-width:700px; line-height:1.55; }
+  .info-controls{ margin-top:16px; display:flex; gap:10px; }
 
   section{ margin-top:56px; }
   .sec-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:18px; }
@@ -97,12 +114,13 @@
 
   .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
   @media (max-width:720px){ .grid-3{ grid-template-columns:1fr; } }
-  .zone-card{ background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:20px; border-top:3px solid var(--zc, var(--mint)); }
-  .zone-card h3{ font-size:16px; color:var(--ink); margin-bottom:8px; text-transform:none; letter-spacing:normal; }
+  .zone-card{ background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:20px; border-top:3px solid var(--zc, var(--mint)); cursor:pointer; transition:transform .15s; }
+  .zone-card:hover{ transform:translateY(-2px); }
+  .zone-card h3{ font-size:17px; color:var(--ink); margin-bottom:8px; }
   .zone-card p{ font-size:13.5px; color:var(--ink-dim); }
 
   .hazard{
-    background:repeating-linear-gradient(135deg, rgba(255,178,56,0.06) 0 14px, rgba(255,178,56,0.11) 14px 28px);
+    background:repeating-linear-gradient(135deg, rgba(255,178,56,0.05) 0 14px, rgba(255,178,56,0.1) 14px 28px);
     border:1px solid rgba(255,178,56,0.3); border-radius:6px; padding:4px;
   }
   .haz-row{ background:var(--panel); margin:4px; padding:16px 18px; display:flex; gap:14px; align-items:flex-start; border-radius:4px; }
@@ -127,102 +145,158 @@
   .tb-cell:last-child{ border-right:none; }
   .tb-cell .k{ font-family:'JetBrains Mono'; font-size:10px; color:var(--ink-faint); letter-spacing:0.1em; margin-bottom:4px; }
   .tb-cell .v{ font-size:13px; color:var(--ink); font-family:'JetBrains Mono'; }
+
+  /* Modal */
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(10,31,51,0.85); backdrop-filter:blur(6px); z-index:100; align-items:center; justify-content:center; padding:16px; }
+  .modal-box{ background:var(--panel); border:1px solid var(--line); border-radius:8px; width:100%; max-width:680px; max-height:88vh; overflow-y:auto; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.6); }
+  .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:12px; }
+  .modal-close{ background:none; border:none; color:var(--ink-dim); font-size:24px; cursor:pointer; }
+  .kit-item{ background:#0A1F33; border:1px solid var(--line); border-radius:4px; padding:12px 14px; margin-bottom:12px; }
+  .kit-item .lbl{ font-family:'JetBrains Mono'; font-size:11px; color:var(--amber); margin-bottom:4px; }
+  .kit-item .val{ font-family:'JetBrains Mono'; font-size:12px; color:var(--ink); word-break:break-all; }
 </style>
 </head>
 <body>
 
-<div class="reg tl"></div><div class="reg tr"></div><div class="reg bl"></div><div class="reg br"></div>
-
 <div class="sheet">
 
-  <div class="doc-num"><span class="sw"></span>DWG NO. SOL–01 · BEGINNER EDITION</div>
-  <h1>Ride <em>the Solana Line</em> —<br>9 stops, simple &amp; clear.</h1>
-  <p class="lede">Solana looks complicated from the outside. It isn't — it's just a short route. Tap a stop below to learn what happens there.</p>
+  <div class="top-bar">
+    <div class="doc-num"><span class="sw"></span>DWG NO. SOL–01 · BEGINNER EDITION</div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-action btn-outline" id="btnTour" onclick="toggleTour()">▶ Авто-тур по станциям</button>
+      <button class="btn-action btn-mint" onclick="document.getElementById('kitModal').style.display='flex'">📁 GitHub Kit</button>
+    </div>
+  </div>
 
+  <!-- SVG Visual Blueprint Banner -->
+  <div class="hero-banner">
+    <svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#06121E"/><stop offset="100%" stop-color="#0A2238"/></linearGradient>
+        <pattern id="pGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(154,196,230,0.08)" stroke-width="1"/></pattern>
+      </defs>
+      <rect width="1200" height="675" fill="url(#bgG)"/>
+      <rect width="1200" height="675" fill="url(#pGrid)"/>
+      <path d="M 100 380 L 450 380 L 550 280 L 850 280 L 950 380 L 1100 380" fill="none" stroke="#4ADE94" stroke-width="8" stroke-linecap="round"/>
+      <path d="M 450 380 L 550 480 L 850 480 L 950 380" fill="none" stroke="#FFB238" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="200" cy="380" r="14" fill="#06121E" stroke="#4ADE94" stroke-width="6"/>
+      <circle cx="700" cy="280" r="22" fill="#FFB238" stroke="#FFFFFF" stroke-width="6"/>
+      <circle cx="1000" cy="380" r="14" fill="#06121E" stroke="#FF6B4A" stroke-width="6"/>
+      <text x="600" y="160" font-family="'Barlow Condensed', sans-serif" font-size="76" font-weight="700" fill="#EAF2FA" text-anchor="middle" letter-spacing="4">THE SOLANA LINE</text>
+      <text x="600" y="210" font-family="'JetBrains Mono', monospace" font-size="20" fill="#4ADE94" text-anchor="middle" letter-spacing="3">A BEGINNER'S TRANSIT MAP · 9 STOPS</text>
+      <text x="700" y="340" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#EAF2FA" text-anchor="middle">~400ms INTERCHANGE</text>
+    </svg>
+  </div>
+
+  <h1>Ride <em>the Solana Line</em> —<br>9 stops, simple &amp; clear.</h1>
+  <p class="lede">Solana looks complicated from the outside. It isn't — it's just a short, fast route. Click any stop below or use the quick buttons.</p>
+
+  <!-- Quick Stop Navigation Buttons -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="selectStop(1)">01. Wallet</button>
+    <button class="tab-btn" onclick="selectStop(2)">02. Seed Phrase</button>
+    <button class="tab-btn" onclick="selectStop(3)">03. Address</button>
+    <button class="tab-btn" onclick="selectStop(4)">04. Send</button>
+    <button class="tab-btn" onclick="selectStop(5)">05. Confirmed ~400ms</button>
+    <button class="tab-btn" onclick="selectStop(6)">06. Fee</button>
+    <button class="tab-btn" onclick="selectStop(7)">07. Verify URL</button>
+    <button class="tab-btn" onclick="selectStop(8)">08. Test First</button>
+    <button class="tab-btn" onclick="selectStop(9)">09. Read &amp; Sign</button>
+  </div>
+
+  <!-- Interactive SVG Map -->
   <div class="map-wrap">
-    <span class="corner-tag">LIVE MAP</span>
-    <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
+    <span class="corner-tag">CLICK ANY STOP</span>
+    <svg class="map-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
       <line x1="60" y1="90" x2="60" y2="110" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
       <text x="80" y="82" class="zone-label" fill="var(--mint)">Getting started</text>
-      <line x1="60" y1="200" x2="330" y2="200" stroke="var(--mint)" stroke-width="5" stroke-linecap="round"/>
+      <line x1="60" y1="200" x2="330" y2="200" stroke="var(--mint)" stroke-width="6" stroke-linecap="round"/>
 
       <text x="380" y="82" class="zone-label" fill="var(--amber)">How it works</text>
-      <line x1="330" y1="200" x2="630" y2="200" stroke="var(--amber)" stroke-width="5"/>
+      <line x1="330" y1="200" x2="630" y2="200" stroke="var(--amber)" stroke-width="6"/>
 
       <text x="695" y="82" class="zone-label" fill="var(--coral)">Stay safe</text>
-      <line x1="630" y1="200" x2="900" y2="200" stroke="var(--coral)" stroke-width="5" stroke-linecap="round"/>
+      <line x1="630" y1="200" x2="900" y2="200" stroke="var(--coral)" stroke-width="6" stroke-linecap="round"/>
 
       <line x1="330" y1="170" x2="330" y2="230" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
       <line x1="630" y1="170" x2="630" y2="230" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3"/>
 
       <g class="station" data-id="1" onclick="selectStop(1)">
-        <circle class="dot" cx="80" cy="200" r="7" stroke="var(--mint)"/>
+        <circle class="dot" cx="80" cy="200" r="8" stroke="var(--mint)"/>
         <text x="80" y="234" text-anchor="middle">Wallet</text>
       </g>
       <g class="station" data-id="2" onclick="selectStop(2)">
-        <circle class="dot" cx="180" cy="200" r="7" stroke="var(--mint)"/>
+        <circle class="dot" cx="180" cy="200" r="8" stroke="var(--mint)"/>
         <text x="180" y="234" text-anchor="middle">Seed phrase</text>
       </g>
       <g class="station" data-id="3" onclick="selectStop(3)">
-        <circle class="dot" cx="280" cy="200" r="7" stroke="var(--mint)"/>
+        <circle class="dot" cx="280" cy="200" r="8" stroke="var(--mint)"/>
         <text x="280" y="234" text-anchor="middle">Address</text>
       </g>
 
       <g class="station" data-id="4" onclick="selectStop(4)">
-        <circle class="dot" cx="380" cy="200" r="7" stroke="var(--amber)"/>
+        <circle class="dot" cx="380" cy="200" r="8" stroke="var(--amber)"/>
         <text x="380" y="234" text-anchor="middle">Send</text>
       </g>
       <g class="station" data-id="5" onclick="selectStop(5)">
-        <circle class="hub-ring" cx="480" cy="200" r="19" fill="none" stroke="var(--amber)" stroke-width="2"/>
-        <circle class="dot" cx="480" cy="200" r="13" stroke="var(--ink)" fill="var(--amber)"/>
+        <circle class="hub-ring" cx="480" cy="200" r="20" fill="none" stroke="var(--amber)" stroke-width="2"/>
+        <circle class="dot" cx="480" cy="200" r="14" stroke="var(--ink)" fill="var(--amber)"/>
         <text x="480" y="240" text-anchor="middle" font-weight="700" fill="var(--ink)">Confirmed ~400ms</text>
       </g>
       <g class="station" data-id="6" onclick="selectStop(6)">
-        <circle class="dot" cx="580" cy="200" r="7" stroke="var(--amber)"/>
+        <circle class="dot" cx="580" cy="200" r="8" stroke="var(--amber)"/>
         <text x="580" y="234" text-anchor="middle">Fee</text>
       </g>
 
       <g class="station" data-id="7" onclick="selectStop(7)">
-        <circle class="dot" cx="680" cy="200" r="7" stroke="var(--coral)"/>
+        <circle class="dot" cx="680" cy="200" r="8" stroke="var(--coral)"/>
         <text x="680" y="234" text-anchor="middle">Verify URL</text>
       </g>
       <g class="station" data-id="8" onclick="selectStop(8)">
-        <circle class="dot" cx="780" cy="200" r="7" stroke="var(--coral)"/>
+        <circle class="dot" cx="780" cy="200" r="8" stroke="var(--coral)"/>
         <text x="780" y="234" text-anchor="middle">Test first</text>
       </g>
       <g class="station" data-id="9" onclick="selectStop(9)">
-        <circle class="dot" cx="880" cy="200" r="7" stroke="var(--coral)"/>
+        <circle class="dot" cx="880" cy="200" r="8" stroke="var(--coral)"/>
         <text x="880" y="234" text-anchor="middle">Read &amp; sign</text>
       </g>
     </svg>
 
     <div class="legend">
-      <div class="legend-item"><span class="sw" style="background:var(--mint)"></span>Getting started (Zone 1)</div>
-      <div class="legend-item"><span class="sw" style="background:var(--amber)"></span>How it works (Zone 2)</div>
-      <div class="legend-item"><span class="sw" style="background:var(--coral)"></span>Stay safe (Zone 3)</div>
+      <div class="legend-item"><span class="sw" style="background:var(--mint)"></span>Zone 1: Getting started</div>
+      <div class="legend-item"><span class="sw" style="background:var(--amber)"></span>Zone 2: How it works</div>
+      <div class="legend-item"><span class="sw" style="background:var(--coral)"></span>Zone 3: Stay safe</div>
       <div class="legend-item">● Interchange = moment transaction is final (~400ms)</div>
     </div>
   </div>
 
+  <!-- Dynamic Info Panel -->
   <div class="info" id="info">
-    <div class="stop-no mono" id="info-no">STOP 05 / 09</div>
-    <h3 id="info-title">Confirmed ~400ms</h3>
-    <p id="info-body">This is the central interchange. Once validators agree, your transaction is written into the ledger — final, in under half a second. There's no waiting around.</p>
+    <div class="info-header">
+      <div class="stop-no mono" id="info-no">STOP 01 / 09</div>
+      <div class="badge z1" id="info-zone">Zone 1: Getting Started</div>
+    </div>
+    <h3 id="info-title">Wallet</h3>
+    <p id="info-body">An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined.</p>
+    <div class="info-controls">
+      <button class="btn-action btn-outline" onclick="prevStop()">← Назад</button>
+      <button class="btn-action btn-mint" onclick="nextStop()">Вперед →</button>
+    </div>
   </div>
 
   <section>
     <div class="sec-head"><span class="sec-num">§1</span><h2>The three zones, at a glance</h2></div>
     <div class="grid-3">
-      <div class="zone-card" style="--zc:var(--mint)">
-        <h3>Getting started</h3>
+      <div class="zone-card" style="--zc:var(--mint)" onclick="selectStop(1)">
+        <h3>Zone 1: Getting started</h3>
         <p>Install a wallet, back up your seed phrase, get your address. This is the one-time setup — five minutes, done once.</p>
       </div>
-      <div class="zone-card" style="--zc:var(--amber)">
-        <h3>How it works</h3>
+      <div class="zone-card" style="--zc:var(--amber)" onclick="selectStop(4)">
+        <h3>Zone 2: How it works</h3>
         <p>Every action you take — a swap, a payment, a mint — becomes a transaction. Validators confirm it in about 400 milliseconds, for a fraction of a cent.</p>
       </div>
-      <div class="zone-card" style="--zc:var(--coral)">
-        <h3>Stay safe</h3>
+      <div class="zone-card" style="--zc:var(--coral)" onclick="selectStop(7)">
+        <h3>Zone 3: Stay safe</h3>
         <p>The habits that keep beginners safe: check the URL, test small, and actually read what you're signing.</p>
       </div>
     </div>
@@ -259,28 +333,96 @@
 
 </div>
 
+<!-- Kit Modal -->
+<div id="kitModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 style="font-family:'Barlow Condensed'; font-size:22px; color:var(--ink);">GitHub Repository &amp; Superteam Kit</h3>
+      <button class="modal-close" onclick="document.getElementById('kitModal').style.display='none'">&times;</button>
+    </div>
+    <div class="kit-item">
+      <div class="lbl">REPO NAME</div>
+      <div class="val">Ride-the-Solana-Line-9-stops-simple-clear.</div>
+    </div>
+    <div class="kit-item">
+      <div class="lbl">ABOUT / DESCRIPTION</div>
+      <div class="val">Ride the Solana Line: 9 stops, simple &amp; clear. An interactive transit-style blueprint map explaining Solana blockchain fundamentals simply for crypto beginners.</div>
+    </div>
+    <div class="kit-item">
+      <div class="lbl">SUPERTEAM EARN BOUNTY LISTING</div>
+      <div class="val"><a href="https://superteam.fun/earn/listing/explain-solana-to-crypto-beginners" target="_blank" style="color:var(--mint); text-decoration:underline;">Explain Solana to Crypto Beginners Listing &rarr;</a></div>
+    </div>
+  </div>
+</div>
+
 <script>
 const stops = {
-  1:{title:"Wallet", body:"An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined."},
-  2:{title:"Seed phrase", body:"A 12–24 word backup that recreates your wallet completely. Write it on paper, never type it anywhere, never screenshot it."},
-  3:{title:"Address", body:"A public string anyone can send you funds to — safe to share, unlike your seed phrase. Think of it as your account number."},
-  4:{title:"Send", body:"You approve an action in your wallet — a swap, a payment, a mint — and it becomes a transaction, broadcast to the network."},
-  5:{title:"Confirmed ~400ms", body:"This is the central interchange. Once validators agree, your transaction is written into the ledger — final, in under half a second."},
-  6:{title:"Fee", body:"A small cost to process your transaction — typically a fraction of a cent, whether you're sending $5 or $5,000."},
-  7:{title:"Verify URL", body:"Fake copies of popular sites are the most common way beginners lose funds. Check the address bar before connecting your wallet."},
-  8:{title:"Test first", body:"Before moving a large amount, send a small test transaction. If it arrives correctly, you're clear to send the rest."},
-  9:{title:"Read & sign", body:"Your wallet's approval pop-up is your last checkpoint. Read what it says before you sign — it's the only step standing between you and a mistake."}
+  1:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Wallet", body:"An app like Phantom, Solflare, or Backpack. It holds your keys and lets you sign transactions — think login and signature, combined."},
+  2:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Seed phrase", body:"A 12–24 word backup that recreates your wallet completely. Write it on paper, never type it anywhere, never screenshot it."},
+  3:{zone:"Zone 1: Getting Started", zClass:"z1", title:"Address", body:"A public string anyone can send you funds to — safe to share, unlike your seed phrase. Think of it as your account number."},
+  4:{zone:"Zone 2: How It Works", zClass:"z2", title:"Send", body:"You approve an action in your wallet — a swap, a payment, a mint — and it becomes a transaction, broadcast to the network."},
+  5:{zone:"Zone 2: How It Works", zClass:"z2", title:"Confirmed ~400ms", body:"This is the central interchange. Once validators agree, your transaction is written into the ledger — final, in under half a second. There's no waiting around."},
+  6:{zone:"Zone 2: How It Works", zClass:"z2", title:"Fee", body:"A small cost to process your transaction — typically a fraction of a cent, whether you're sending $5 or $5,000."},
+  7:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Verify URL", body:"Fake copies of popular sites are the most common way beginners lose funds. Check the address bar before connecting your wallet."},
+  8:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Test first", body:"Before moving a large amount, send a small test transaction. If it arrives correctly, you're clear to send the rest."},
+  9:{zone:"Zone 3: Stay Safe", zClass:"z3", title:"Read & sign", body:"Your wallet's approval pop-up is your last checkpoint. Read what it says before you sign — it's the only step standing between you and a mistake."}
 };
 
+let currentStop = 1;
+let tourInterval = null;
+
 function selectStop(id){
+  currentStop = id;
   document.querySelectorAll('.station').forEach(s=>s.classList.remove('active'));
   const el = document.querySelector('.station[data-id="'+id+'"]');
   if(el) el.classList.add('active');
+
+  document.querySelectorAll('.tab-btn').forEach((btn, idx)=>{
+    if(idx+1 === id) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+
+  const data = stops[id];
   document.getElementById('info-no').textContent = 'STOP 0'+id+' / 09';
-  document.getElementById('info-title').textContent = stops[id].title;
-  document.getElementById('info-body').textContent = stops[id].body;
+  document.getElementById('info-title').textContent = data.title;
+  document.getElementById('info-body').textContent = data.body;
+  
+  const zoneBadge = document.getElementById('info-zone');
+  zoneBadge.textContent = data.zone;
+  zoneBadge.className = 'badge ' + data.zClass;
 }
-document.querySelector('.station[data-id="5"]').classList.add('active');
+
+function nextStop(){
+  let next = currentStop + 1;
+  if(next > 9) next = 1;
+  selectStop(next);
+}
+
+function prevStop(){
+  let prev = currentStop - 1;
+  if(prev < 1) prev = 9;
+  selectStop(prev);
+}
+
+function toggleTour(){
+  const btn = document.getElementById('btnTour');
+  if(tourInterval){
+    clearInterval(tourInterval);
+    tourInterval = null;
+    btn.textContent = '▶ Авто-тур по станциям';
+    btn.classList.remove('btn-amber');
+    btn.classList.add('btn-outline');
+  } else {
+    btn.textContent = '⏸ Остановить тур';
+    btn.classList.remove('btn-outline');
+    btn.classList.add('btn-amber');
+    tourInterval = setInterval(()=>{
+      nextStop();
+    }, 2500);
+  }
+}
+
+selectStop(1);
 </script>
 
 </body>
