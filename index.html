@@ -105,6 +105,25 @@
   .sim-box { padding: 12px 14px; background: #0A1F33; border: 1px dashed var(--amber); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
   .card-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 16px; }
 
+  /* Fee Clicker & Speed Test Panel */
+  .calc-box { margin-top: 28px; background: #0A1F33; border: 1px solid var(--line); border-radius: 8px; padding: 22px; }
+  .calc-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  @media (max-width: 768px) { .calc-metrics { grid-template-columns: 1fr 1fr; } }
+  .metric-card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .metric-card .m-title { font-family: 'JetBrains Mono'; font-size: 10.5px; color: var(--ink-faint); text-transform: uppercase; }
+  .metric-card .m-val { font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 700; margin-top: 4px; }
+
+  /* Test / Quiz Block */
+  .quiz-card { margin-top: 30px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 22px; }
+  .q-item { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .q-item:first-of-type { border-top: none; padding-top: 0; }
+  .q-title { font-size: 14.5px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+  .q-opts { display: flex; flex-direction: column; gap: 6px; }
+  .q-btn { background: #0A1F33; border: 1px solid var(--line); color: var(--ink-dim); text-align: left; padding: 8px 12px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+  .q-btn:hover { border-color: var(--ink-dim); color: var(--ink); }
+  .q-btn.correct { background: rgba(74,222,148,0.2) !important; border-color: var(--mint) !important; color: var(--mint) !important; font-weight: 600; }
+  .q-btn.wrong { background: rgba(255,107,74,0.2) !important; border-color: var(--coral) !important; color: var(--coral) !important; }
+
   /* Sections */
   section { margin-top: 50px; }
   .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
@@ -224,7 +243,7 @@
     </div>
 
     <div class="sim-box">
-      <div class="mono" style="font-size:12px;">⚡ Velocity Test: <span id="simStatus" style="color:var(--amber); font-weight:700;">Ready to test 400ms settlement</span></div>
+      <div class="mono" style="font-size:12px;">⚡ Single Slot Test: <span id="simStatus" style="color:var(--amber); font-weight:700;">Ready to test 400ms settlement</span></div>
       <button class="btn btn-mint" id="btnRunSpeed">Run 400ms Test</button>
     </div>
 
@@ -233,6 +252,81 @@
       <div style="display:flex; gap:8px;">
         <button class="btn btn-outline" id="btnPrev">← Previous</button>
         <button class="btn btn-mint" id="btnNext">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE TRANSACTION FEE CLICKER TEST -->
+  <div class="calc-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h3 class="font-display" style="font-size:22px; color:var(--ink); margin-bottom:2px;">⚡ Live Transaction Fee Clicker &amp; Cost Simulator</h3>
+        <p style="font-size:13px; color:var(--ink-dim);">Click below to broadcast simulated Solana transactions and compare gas costs in real-time.</p>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-mint" id="btnClickTx" style="font-size:13px; padding:10px 16px;">+ Send 1 Transaction (Click)</button>
+        <button class="btn btn-outline" id="btnClick10Tx">+10 Tx</button>
+        <button class="btn btn-outline" id="btnClick100Tx">+100 Tx</button>
+        <button class="btn btn-outline" id="btnResetTx" style="color:var(--coral);">Reset</button>
+      </div>
+    </div>
+
+    <div class="calc-metrics">
+      <div class="metric-card">
+        <div class="m-title">Total Transactions</div>
+        <div class="m-val" id="valTxCount" style="color:var(--ink);">0</div>
+      </div>
+      <div class="metric-card" style="border-color:rgba(74,222,148,0.4);">
+        <div class="m-title">Solana Total Cost</div>
+        <div class="m-val" id="valSolCost" style="color:var(--mint);">$0.0000</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-title">Legacy Chain Cost (~$5.20/tx)</div>
+        <div class="m-val" id="valEthCost" style="color:var(--amber);">$0.00</div>
+      </div>
+      <div class="metric-card" style="border-color:rgba(255,178,56,0.4);">
+        <div class="m-title">Money Saved on Solana</div>
+        <div class="m-val" id="valSaved" style="color:var(--mint);">$0.00</div>
+      </div>
+    </div>
+
+    <div class="mono" id="clickLog" style="background:#06121E; border:1px solid var(--line); border-radius:4px; padding:10px 14px; font-size:12px; color:var(--ink-dim);">
+      💡 Tip: Click the button above to simulate high-frequency transfers for micro-cents.
+    </div>
+  </div>
+
+  <!-- INTERACTIVE BEGINNER KNOWLEDGE TEST / QUIZ -->
+  <div class="quiz-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+      <h3 class="font-display" style="font-size:22px; color:var(--ink);">🧪 Solana Beginner Transit Quiz</h3>
+      <span class="badge badge-z1" id="quizScore">Score: 0 / 3</span>
+    </div>
+    <p style="font-size:13px; color:var(--ink-dim); margin-bottom:14px;">Test your knowledge of the 9 stops before boarding the mainnet.</p>
+
+    <div class="q-item">
+      <div class="q-title">1. How fast does Solana confirm transactions into finalized blocks?</div>
+      <div class="q-opts">
+        <button class="q-btn" data-q="1" data-ans="wrong">A) 10 to 15 minutes</button>
+        <button class="q-btn" data-q="1" data-ans="correct">B) ~400 milliseconds (Sub-second via Proof of History)</button>
+        <button class="q-btn" data-q="1" data-ans="wrong">C) 24 hours</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-title">2. Who should you share your 12-word seed phrase with?</div>
+      <div class="q-opts">
+        <button class="q-btn" data-q="2" data-ans="wrong">A) Official Solana Discord support in direct messages</button>
+        <button class="q-btn" data-q="2" data-ans="wrong">B) Any website promising free airdrop tokens</button>
+        <button class="q-btn" data-q="2" data-ans="correct">C) Nobody ever — it is your private master key</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-title">3. How much is an average Solana transaction fee?</div>
+      <div class="q-opts">
+        <button class="q-btn" data-q="3" data-ans="correct">A) Less than $0.001 (a fraction of a penny)</button>
+        <button class="q-btn" data-q="3" data-ans="wrong">B) $15 to $50 depending on network congestion</button>
+        <button class="q-btn" data-q="3" data-ans="wrong">C) Exactly 1 full SOL per transfer</button>
       </div>
     </div>
   </div>
@@ -401,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Speed Simulation Test
+  // Speed Simulation Test (400ms)
   document.getElementById('btnRunSpeed').addEventListener('click', function() {
     const el = document.getElementById('simStatus');
     let start = Date.now();
@@ -418,6 +512,67 @@ document.addEventListener('DOMContentLoaded', function() {
         el.textContent = "Validating on Tower BFT... (" + diff + "ms)";
       }
     }, 35);
+  });
+
+  // Transaction Fee Clicker State & Logic
+  let txCount = 0;
+  const SOL_FEE = 0.00025;
+  const ETH_FEE = 5.20;
+
+  function updateFeeMetrics(added) {
+    txCount += added;
+    const solTotal = txCount * SOL_FEE;
+    const ethTotal = txCount * ETH_FEE;
+    const saved = ethTotal - solTotal;
+
+    document.getElementById('valTxCount').textContent = txCount.toLocaleString();
+    document.getElementById('valSolCost').textContent = '$' + solTotal.toFixed(4);
+    document.getElementById('valEthCost').textContent = '$' + ethTotal.toFixed(2);
+    document.getElementById('valSaved').textContent = '$' + saved.toFixed(2);
+
+    const log = document.getElementById('clickLog');
+    if (txCount === 0) {
+      log.textContent = "💡 Tip: Click the button above to simulate high-frequency transfers for micro-cents.";
+    } else {
+      log.innerHTML = `🚀 <strong style="color:var(--mint);">${txCount} transactions</strong> confirmed in ~400ms slots! You saved <strong style="color:var(--amber);">$${saved.toFixed(2)}</strong> compared to legacy blockchains.`;
+    }
+  }
+
+  document.getElementById('btnClickTx').addEventListener('click', function() { updateFeeMetrics(1); });
+  document.getElementById('btnClick10Tx').addEventListener('click', function() { updateFeeMetrics(10); });
+  document.getElementById('btnClick100Tx').addEventListener('click', function() { updateFeeMetrics(100); });
+  document.getElementById('btnResetTx').addEventListener('click', function() {
+    txCount = 0;
+    updateFeeMetrics(0);
+  });
+
+  // Quiz Logic
+  let answeredQuestions = {};
+  document.querySelectorAll('.q-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const qNum = this.getAttribute('data-q');
+      const isCorrect = this.getAttribute('data-ans') === 'correct';
+      
+      // Disable brother buttons
+      const siblings = document.querySelectorAll(`.q-btn[data-q="${qNum}"]`);
+      siblings.forEach(b => {
+        if (b.getAttribute('data-ans') === 'correct') {
+          b.classList.add('correct');
+        } else if (b === this && !isCorrect) {
+          b.classList.add('wrong');
+        }
+        b.style.pointerEvents = 'none';
+      });
+
+      answeredQuestions[qNum] = isCorrect;
+      
+      // Update Score
+      let score = Object.values(answeredQuestions).filter(Boolean).length;
+      document.getElementById('quizScore').textContent = `Score: ${score} / 3`;
+      if (score === 3) {
+        document.getElementById('quizScore').textContent = `🎉 Score: 3 / 3 (Perfect!)`;
+      }
+    });
   });
 
   // Auto-Tour Toggle
